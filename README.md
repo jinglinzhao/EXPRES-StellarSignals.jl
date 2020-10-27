@@ -1,1 +1,10 @@
-# EXPRES-StellarSignals [![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://eford.github.io/EXPRES-StellarSignals.jl/stable) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://eford.github.io/EXPRES-StellarSignals.jl/dev) [![Build Status](https://github.com/eford/EXPRES-StellarSignals.jl/workflows/CI/badge.svg)](https://github.com/eford/EXPRES-StellarSignals.jl/actions) [![Coverage](https://codecov.io/gh/eford/EXPRES-StellarSignals.jl/branch/master/graph/badge.svg)](https://codecov.io/gh/eford/EXPRES-StellarSignals.jl)
+# [EXPRES Stellar Signals Project](http://exoplanets.astro.yale.edu/science/activity.php)
+## Repository with Penn State Submissions
+
+### Directory Layout
+- data:  Intermediate data files (e.g., line lists, ccfs)
+- docs:  Currently empty documenter template
+- methods: Source for descriptions of methods
+- pennstate: Results to be submitted following naming/format conventions provided at [submission instructions](http://exoplanets.astro.yale.edu/science/Submission_Guidelines.pdf).
+- src: Code/scripts to generate Eric's results (if it makes sense for others to put their code here, then please create a subdirectory, so it's easy to merge)
+- test: Currently empty template for CI testing
