@@ -1,0 +1,7 @@
+name = "EXPRES-StellarSignals"
+uuid = "64788a72-0edf-4a80-942f-ec9f9e2f0d35"
+authors = ["Eric Ford"]
+version = "0.1.0"
+
+[compat]
+julia = "1.5"
