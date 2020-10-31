@@ -72,12 +72,14 @@ It also allows more direct comparison of results accross methods.
 The method is sensitive to line shape changes, including changes in the differential changes in line depths, widths and assymetries between lines.
 
 \subsection{Are there any known pros/cons of the method?  For instance, is there something in particular that sets this analysis apart from previous methods?}
-This method has the potential to exploit information about changes in shapes lines that are
+This method has the potential to exploit information about changes in shapes lines and does not average over many lines, such as methods analyzing the CCF.
+
 Given the small number of observations and large temporal gaps for the HD 1010501 dataset, we did not apply the multivariate Gaussian Process models recommended by Jones et al. (2020) or Gilbertson et al. (2020).
 Therefore, our method is sensitive only to changes in the wavelength domain and does not use any temporal information.
 We hope that future datasets will include a sufficient number and spacing of observations to allow us to exploit the temporal information.
 
 \subsection{What does the method output and how is this used to mitigate contributions from photospheric velocities?}
+
 The method provides scores for each principal component.  Ideally, these would be used with a multivariate GP to model stellar activity-induced RVs.  For the HD 101501 dataset, we use only linear regression.
 In principle, one can use the basis vectors associated with each principal component to understand what features in the spectra are contributing to each score.
 
@@ -135,6 +137,12 @@ Having observations more closely spaced (e.g., one observation each night for se
 Yes.
 However, the results for the second exposure are somewhat questionable.
 It's not clear if this is due to the data (e.g., non-linear detector response) or analysis (e.g., normalization).
+
+There may also be some impact due to the cross-disperser issue identified previously.
+
+We tried applying the method separately to data from epoch 4 and epoch 5.
+While there were some differences, it was not clear that there was a significant benefit, so our submitted analysis lumped these together.
+Nevertheless, it would likely be wise to allow for a velocity offset to spectra from the two epochs, when fitting the data.
 
 \subsection{If the method is GP based, please provide the kernel used and the best-fit hyper parameters with errors.  Otherwise, just write ``Not Applicable.''}
 Not Applicable.
