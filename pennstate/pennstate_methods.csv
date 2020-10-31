@@ -1,15 +1,17 @@
 Name,Nick Name,Type,Input,Re-Calculated,Run On,Run Time,Results
-# Eric is lead for,,,,,,,
-Doppler constrained PCA on order spectra,dcpca1,OTH,spectra,RVs & indicators,Laptop,20s,pennstate_dpca1_results.csv
-Doppler constrained PCA on chunks near lines in ESPRESSO mask,dcpca2,OTH,spectra,RVs & indicators,Laptop,20s,pennstate_dpca2_results.csv
-Doppler constrained PCA on chunks near lines in a custom line list,dcpca3,OTH,spectra,RVs & indicators,Laptop,20s,pennstate_dpca3_results.csv
-# Alex is lead for,,,,,,,
-CCFs using custom masks segregated by line depth,ccfmultidepth1,RV,spectra,RVs & indicators,Laptop,minute,pennstate_ccfmultidepth1_results.csv
-# Christian is lead for,,,,,,,
-Doppler constrained PCA on chunks near ESPRESSO mask using a telluric model,dcpca2+tel1,OTH,spectra & telluric model,RVs & indicators,Laptop,minute,pennstate_dcpa2+tel1_results.csv
-Doppler constrained PCA on chunks near lines in custom line list using a telluric model,dcpca3+tel1,OTH,spectra,RVs & indicators,Laptop,minute,pennstate_dcpa3+tel1_results.csv
-# Jinglin is lead for,,,,,,,
-$\Phi$esta on EXPRES provided CCFs,fiesta1,OTH,CCFs,None,Laptop,minute,pennstate_fiesta1_results.csv
-$\Phi$esta on custom CCFs,fiesta2,OTH,CCFs,CCFs,Laptop,minute,pennstate_fiesta2_results.csv
-,,,,,,,
-~,,,,,,,
+# Eric is lead for...
+Doppler constrained PCA in chunks near lines in ESPRESSO mask,dcpca0,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca0_results.csv
+Doppler constrained PCA on chunks near lines in custom line list/mask 1,dcpca1,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca1_results.csv
+Doppler constrained PCA on chunks near lines in custom line list/mask 2,dcpca2,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca2_results.csv
+Scalpels using CCFs from ESPRESSO mask,scalpels0,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels0_results.csv
+Scalpels using CCFs from custom line list/mask 1,scalpels1,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels1_results.csv
+Scalpels using CCFs from custom line list/mask 2,scalpels2,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels2_results.csv
+# Jinglin is lead for...
+#$\Phi$esta on EXPRES provided CCFs,fiesta1,OTH,CCFs,None,Laptop,minute,pennstate_fiesta1_results.csv
+#$\Phi$esta on custom CCFs,fiesta2,OTH,CCFs,CCFs,Laptop,minute,pennstate_fiesta2_results.csv
+# Alex is lead for...
+#CCFs using custom masks segregated by line depth,ccfmultidepth1,RV,spectra,RVs & indicators,Laptop,minute,pennstate_ccfmultidepth1_results.csv
+# Christian is lead for ...
+#CCFs using custom masks segregated by line depth,ccfmultidepth1,RV,spectra,RVs & indicators,Laptop,minute,pennstate_ccfmultidepth1_results.csv
+#Doppler constrained PCA that jointly fits tellurics,dcpca_tel0,OTH,spectra,RVs & indicators,Laptop,TBD,pennstate_dcpca_tel0_results.csv
+
