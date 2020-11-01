@@ -7,8 +7,8 @@ Scalpels using CCFs from ESPRESSO mask,scalpels0,OTH,spectra,CCFs & RVs & indica
 Scalpels using CCFs from custom line list/mask 1,scalpels1,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels1_results.csv
 Scalpels using CCFs from custom line list/mask 2,scalpels2,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels2_results.csv
 # Jinglin is lead for...,,,,,,,
-#$\Phi$esta on EXPRES provided CCFs,fiesta1,OTH,CCFs,None,Laptop,40s,pennstate_fiesta1_results.csv
-#$\Phi$esta on custom CCFs,fiesta2,OTH,CCFs,CCFs,Laptop,minute,pennstate_fiesta2_results.csv
+#$\Phi$esta on EXPRES provided CCFs,fiesta1,OTH,CCFs,None,Laptop,40s,101501_pennstate_fiesta1_results.csv
+#$\Phi$esta on custom CCFs,fiesta2,OTH,CCFs,CCFs,Laptop,minute,101501_pennstate_fiesta_f75s75v3_results.csv 101501_pennstate_fiesta_f80s85v2_results.csv
 # Alex is lead for...,,,,,,,
 #CCFs using custom masks segregated by line depth,ccfmultidepth1,RV,spectra,RVs & indicators,Laptop,minute,pennstate_ccfmultidepth1_results.csv
 # Christian is lead for ...,,,,,,,
