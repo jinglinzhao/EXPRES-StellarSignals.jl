@@ -59,8 +59,9 @@
 \subsection{Please provide a short (1-2 paragraph) summary of the general idea of the method.  What does it do and how?  If the method has been previously published, please provide a link to that work in addition to answering this and the following questions.}
 
 We applied the Scalpels algorithm for separating shift and shape-induced changes in the CCF.
-The methodology closely follows that of Collier-Cameron et al. (2020; arxiv:TBD; submitted to MNRAS) and is very similar to that used by the St. Andrew's group.
+The methodology closely follows that of Collier-Cameron et al. (2020; arxiv:2011.00018; submitted to MNRAS) and is very similar to that used by the St. Andrew's group.
 Rather than providing a largely redundant response to that of the St. Andrew's group, we only highlight differences in the implementation details.
+Code is avaliable at https://github.com/RvSpectML/Scalpels.jl 
 
 %\subsection{What is the method sensitive to? (e.g. asymmetric line shapes, certain periodicities, etc.)}
 %See St. Andrew's response.
@@ -80,7 +81,7 @@ Rather than providing a largely redundant response to that of the St. Andrew's g
 
 A larger set of spectra would be ideal.  For a star like HD 1010501 that appears to have substantial activity, there are strong correlations between observations within one night (or even subsequent nights).  Therefore, the effective number of observations was substantially less than the total number of observations.
 
-We also note that Scalpels has previous been applied to daily average solar observations which effectively average over granulation signals.  While it appears the the RVs of for HD 101501 are dominated by stellar activity rather than granulation, the ideal dataset would have multiple observations per night so as to average over granulation.
+It may be important to note that Scalpels has previously been applied to daily average solar observations which effectively average over granulation signals.  While it appears the the RVs of for HD 101501 are dominated by stellar activity rather than granulation, the ideal dataset would have longer or multiple observations per night so as to average over granulation.
 
 %\subsection{Are there any absolute requirements of the data that must be satisfied in order for this method to work?  Rough estimates welcome.}
 %See St. Andrew's response.
@@ -92,14 +93,14 @@ We also note that Scalpels has previous been applied to daily average solar obse
 \section{Applying the Method}
 \subsection{What adjustments were required to implement this method on \texttt{EXPRES} data?  Were there any unexpected challenges?}
 
-The St. Andrew's analysis used the same CCF mask as our "scalpels_clean2" analysis.
-We used RVs derived from fitting a Gaussian to those same CCFs, rather than using the RVs provided by the EXPRES team.
+The St. Andrew's analysis used the same CCF mask as the Penn State team's "scalpels_clean2" analysis.
+We used RVs derived from fitting a Gaussian to the resulting CCFs, rather than using the RVs provided by the EXPRES team.  This resulted in the input RVs having a smaller RMS and allowed us to use significantly fewer basis vectors than the St. Andrew's team.  
 
 %\subsection{How robust is the method to different input parameters, i.e. does running the method require a lot of tuning to be implemented optimally?}
 
 \subsection{What metric does the method (or parameter tuner) use internally to decide if the method is performing better or worse?  (e.g. nightly RMS, specific likelihood function, etc.)}
 
-For reasons described in 2.1, we limited the number of basis vectors to remove at 2 (rather than 6 by St. Andrew's group), so as to minimize risk of overfitting to the data.
+For reasons described in \S 2.1, we limited the number of basis vectors to remove at 2 (rather than 6 by St. Andrew's group), so as to minimize risk of overfitting to the data.
 
 %\subsection{Other comments?}
 
@@ -108,12 +109,13 @@ For reasons described in 2.1, we limited the number of basis vectors to remove a
 \subsection{Did the method perform as expected?  If not, are there adjustments that could be made to the data or observing schedule to enhance the result?}
 
 The method appears to have performed well.  We expect that it could perform even better with a substantially larger number of spectra.
+If there were subsets of the data that included dense sampling spread over ~2 or more rotation periods, then it might be possible to further improve on the Scalpels velocities by using the cleaned velocities and Scalpels indicators as inputs into a multivariate Gaussian Process model for stellar variability (Gilbertson et al. 2020; arXiv:2009.01085).
 
-% \subsection{Was the method able to run on all exposures?  If not, is there a known reason why it failed for some exposures?}
-% See St. Andrew's response.
+\subsection{Was the method able to run on all exposures?  If not, is there a known reason why it failed for some exposures?}
+Yes.  We did not treat any observations differently for the Scalpels analysis.
 
-%\subsection{If the method is GP based, please provide the kernel used and the best-fit hyper parameters with errors.  Otherwise, just write ``Not Applicable.''}
-%See St. Andrew's response.
+\subsection{If the method is GP based, please provide the kernel used and the best-fit hyper parameters with errors.  Otherwise, just write ``Not Applicable.''}
+Not Applicable.
 
 %\subsection{Other comments?}
 
