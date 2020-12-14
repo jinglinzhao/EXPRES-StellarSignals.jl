@@ -35,31 +35,38 @@ end
 
 linelist_for_ccf_fn_w_path = joinpath(pkgdir(EchelleCCFs),"data","masks","G9.espresso.mas")
  line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity, Δv_to_avoid_tellurics = RvSpectMLBase.max_bc, recalc=true, verbose=false)
- (ccfs, v_grid) = ccf_total(order_list_timeseries_ref_obs_only, line_list_espresso, pipeline_plan,  mask_scale_factor=2.0, ccf_mid_velocity=ccf_mid_velocity, v_step=100, recalc=true)
+ ((ccfs, ccf_vars), v_grid) = ccf_total(order_list_timeseries_ref_obs_only, line_list_espresso, pipeline_plan,  mask_scale_factor=2.0, ccf_mid_velocity=ccf_mid_velocity, v_step=100, recalc=true, calc_ccf_var=true)
  line_width_50 = RvSpectMLBase.calc_line_width(v_grid,view(ccfs,:,1),frac_depth=0.5)
  line_sigma = line_width_50/sqrt(2*log(2))
  line_width_05 = RvSpectMLBase.calc_line_width(v_grid,view(ccfs,:,1),frac_depth=0.05)
  σ_rvs_formal_espresso = map(obsid->calc_formal_rv_precission(all_spectra[obsid],RvSpectMLBase.make_chunk_list_from_loc_df(all_spectra[obsid],get_inst(all_spectra), line_list_espresso),smooth_factor=2.0),1:length(all_spectra) )
  mean(σ_rvs_formal_espresso), median(σ_rvs_formal_espresso), extrema(σ_rvs_formal_espresso)
- alg_fit_rv =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=2)
- rvs_ccf_ref = RvSpectML.calc_rvs_from_ccf_total( reshape(ccfs,size(ccfs,1),1), pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, bin_nightly=false, recalc=true, alg_fit_rv=alg_fit_rv)
- σ_rvs_formal_espresso
 
-((ccfs_espresso, ccf_vars_espresso), v_grid) = ccf_total(order_list_timeseries, line_list_espresso, pipeline_plan,  mask_scale_factor=8.0, range_no_mask_change=line_width_05, ccf_mid_velocity=ccf_mid_velocity, calc_ccf_var=true, recalc=true)
+((ccfs, ccf_vars), v_grid) = ccf_total(order_list_timeseries_ref_obs_only, line_list_espresso, pipeline_plan,  mask_scale_factor=8.0, range_no_mask_change=line_width_05, ccf_mid_velocity=ccf_mid_velocity, recalc=true, calc_ccf_var=true)
  alg_fit_rv =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=2)
- rvs_ccf_espresso = RvSpectML.calc_rvs_from_ccf_total(ccfs_espresso, ccf_vars_espresso, pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv)
+ rvs_ccf_ref = RvSpectML.calc_rvs_from_ccf_total( reshape(ccfs,size(ccfs,1),1), reshape(ccf_vars,size(ccf_vars,1),1), pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, bin_nightly=false, recalc=true, alg_fit_rv=alg_fit_rv)
+ σ_rv_fit_ref = deepcopy(read_cache(pipeline_plan,:σ_rvs_ccf_total))
+ σ_rvs_formal_espresso
+ ccf_var_scale_factor = σ_rvs_formal_espresso[ref_obs_idx]/σ_rv_fit_ref[1]
+
+((ccfs_espresso, ccf_vars_espresso), v_grid) = ccf_total(order_list_timeseries, line_list_espresso, pipeline_plan,  mask_scale_factor=8.0, range_no_mask_change=line_width_05, ccf_mid_velocity=ccf_mid_velocity, ccf_var_scale=ccf_var_scale_factor, calc_ccf_var=true, recalc=true)
+ # ccf_vars_espresso .*= ccf_var_scale_factor  # If wanted to scale ccf_var manually, rather than passing ccf_var_scale=ccf_var_scale_factor above
+ alg_fit_rv =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=2)
+ rvs_ccf_espresso = RvSpectML.calc_rvs_from_ccf_total(ccfs_espresso, ccf_vars_espresso, pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true,  bin_nightly=false, alg_fit_rv=alg_fit_rv)
  σ_rvs_ccf_espresso = deepcopy(read_cache(pipeline_plan,:σ_rvs_ccf_total))
  rvs_ccf_espresso, σ_rvs_ccf_espresso
-
-((ccfs_espresso2, ccf_vars_espresso2, ccf_covars_espresso2), v_grid2) = ccf_total(order_list_timeseries, line_list_espresso, pipeline_plan,  mask_scale_factor=8.0, range_no_mask_change=line_width_05, ccf_mid_velocity=ccf_mid_velocity, calc_ccf_covar=true, recalc=true)
-alg_fit_rv2 =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=2)
-rvs_ccf_espresso2 = RvSpectML.calc_rvs_from_ccf_total(ccfs_espresso2, ccf_covars_espresso2, pipeline_plan, v_grid=v_grid2, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv2)
-σ_rvs_ccf_espresso2 = deepcopy(read_cache(pipeline_plan,:σ_rvs_ccf_total))
-rvs_ccf_espresso2, σ_rvs_ccf_espresso2
-
-0
+ σ_rvs_ccf_espresso./σ_rvs_formal_espresso
 
 #=
+# If you wanted to compute the full covariance matrix for the CCFs.  VERY slow.  And not that different.
+((ccfs_espresso2, ccf_covars_espresso2), v_grid2) = ccf_total(order_list_timeseries_ref_obs_only, line_list_espresso, pipeline_plan,  mask_scale_factor=8.0, range_no_mask_change=line_width_05, ccf_mid_velocity=ccf_mid_velocity, calc_ccf_covar=true, recalc=true)
+alg_fit_rv2 =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=2)
+rvs_ccf_espresso2 = RvSpectML.calc_rvs_from_ccf_total(ccfs_espresso2, ccf_covars_espresso2, pipeline_plan, v_grid=v_grid2, times = order_list_timeseries.times, recalc=true, bin_nightly=false, alg_fit_rv=alg_fit_rv2)
+rvs_ccf_espresso2, σ_rvs_ccf_espresso2
+=#
+
+#= =#
+
 chunk_list_timeseries = RvSpectMLBase.make_chunk_list_timeseries_telluric_free(all_spectra, line_list_espresso, min_pixels_in_chunk=5, verbose=false)
  dont_need_to!(pipeline_plan,:extract_orders)
  rv_offset_epoch4_minus_epoch5 = calc_epoch_offset_vector(rvs_ccf_espresso, σ_rvs_formal_espresso, tidx_epoch4, tidx_epoch5 )
@@ -150,4 +157,4 @@ num_basis_scalpels = 2
  CSV.write(joinpath("pennstate","101501","101501_pennstate_scalpels2_results.csv"), output_df)
 
 println("# Done")
-=#
+#= =#
