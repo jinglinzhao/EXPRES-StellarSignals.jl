@@ -38,3 +38,9 @@ tmp.jl
 
 # VScode
 .vscode
+
+# Plots
+*.png
+
+# CCF Outputs
+*_ccf.fits
