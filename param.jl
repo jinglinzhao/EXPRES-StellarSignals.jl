@@ -2,7 +2,7 @@
 
 global max_spectra_to_use = 200
 if max_spectra_to_use < 200
-   @warn "param.in setting max_spectra_to_use to " * max_spectra_to_use
+   @warn "param.in setting max_spectra_to_use to " * string(max_spectra_to_use)
 end
 global fits_target_str
 if fits_target_str == "101501"
