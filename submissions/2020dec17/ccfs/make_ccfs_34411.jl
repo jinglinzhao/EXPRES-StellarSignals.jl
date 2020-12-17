@@ -121,7 +121,7 @@ for (i,ord) in enumerate(max_orders)
    println("# Order: ", i)
    if sum(view(order_ccfs,:,i,1)) > 0
       rvs_order_ccf = RvSpectML.calc_rvs_from_ccf_total(view(order_ccfs,:,i,:), view(order_ccf_vars,:,i,:), pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv2)
-      alg_fit_rv3 =  EchelleCCFs.MeasureRvFromCCFTemplate(v_grid=v_grid, frac_of_width_to_fit=2.0, template = vec(mean(view(order_ccfs,:,i,:),dims=2)) )
+      alg_fit_rv3 =  EchelleCCFs.MeasureRvFromCCFTemplate(v_grid=v_grid, frac_of_width_to_fit=1.5, template = vec(mean(view(order_ccfs,:,i,:),dims=2)) )
       order_rvs_g[:,i] .= read_cache(pipeline_plan, :rvs_ccf_total )
       order_rv_std_g[:,i] .= read_cache(pipeline_plan, :σ_rvs_ccf_total)
       rvs_order_ccf = RvSpectML.calc_rvs_from_ccf_total(view(order_ccfs,:,i,:), view(order_ccf_vars,:,i,:), pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv3)
