@@ -41,8 +41,12 @@ lfc_orders = 43:72
   #order_list_timeseries = extract_orders(all_spectra,pipeline_plan, orders_to_use=max_orders, recalc=true )
   order_list_timeseries = extract_orders(all_spectra,pipeline_plan, orders_to_use=lfc_orders, recalc=true )
 
-linelist_for_ccf_fn_w_path = joinpath(pkgdir(EchelleCCFs),"data","masks","G2.espresso.mas")
- line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity, Δv_to_avoid_tellurics = RvSpectMLBase.max_bc, recalc=true, verbose=true)
+line_list_filename = "G2.espresso.mas"
+ linelist_for_ccf_fn_w_path = joinpath(pkgdir(EchelleCCFs),"data","masks",line_list_filename)
+ line_width_50_default = 10.0e3
+ lsf_width = 2.0e3
+ line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity,
+      Δv_to_avoid_tellurics = 2*RvSpectMLBase.max_bc+3*lsf_width, recalc=true, verbose=true)
 
 (ccfs, v_grid) = ccf_total(order_list_timeseries, line_list_espresso, pipeline_plan,  mask_scale_factor=4.0, ccf_mid_velocity=ccf_mid_velocity, recalc=true)
 
@@ -61,15 +65,17 @@ line_width_50 = RvSpectMLBase.calc_line_width(v_grid,view(ccfs,:,1),frac_depth=0
 line_width_05 = RvSpectMLBase.calc_line_width(v_grid,view(ccfs,:,1),frac_depth=0.05)
 
 line_list_espresso_old = copy(line_list_espresso)
- line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity, Δv_to_avoid_tellurics = 1*RvSpectMLBase.max_bc+2*line_width_50, recalc=true, verbose=true)
+ line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity,
+      Δv_to_avoid_tellurics = 1*RvSpectMLBase.max_bc+5*line_width_50+2*default_ccf_mask_v_width(EXPRES1D()), recalc=true, verbose=true)
  #CSV.write(joinpath("pennstate","34411","34411_line_list_espresso.csv"), line_list_espresso)
 
-msf = 4.0; fwtf = 1.5
+msf = 4.0; fwtf = 2.0
  println("# mask_scale_factor = ", msf, ", frac_width_to_fit =  ", fwtf, ". ")
  ((ccfs_espresso, ccf_vars_espresso), v_grid) = ccf_total(order_list_timeseries, line_list_espresso, pipeline_plan,  mask_scale_factor=msf, ccf_mid_velocity=ccf_mid_velocity, v_step=100,
    #v_max=RvSpectMLBase.max_bc,
-   v_max= 2*RvSpectMLBase.max_bc, #+2*line_width_50,
+   v_max= 0*RvSpectMLBase.max_bc+5*line_width_50,
    calc_ccf_var=true, recalc=true)
+ #fwtf = 4.0; println("# mask_scale_factor = ", msf, ", frac_width_to_fit =  ", fwtf, ". ")
  alg_fit_rv =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=fwtf)
  rvs_ccf_espresso = RvSpectML.calc_rvs_from_ccf_total(ccfs_espresso, ccf_vars_espresso, pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv)
  σ_rvs_espresso = deepcopy(read_cache(pipeline_plan,:σ_rvs_ccf_total))
@@ -81,8 +87,8 @@ plot(v_grid,ccfs_norm , labels=:none)
 plot(v_grid,(ccfs_norm.-ccf_template)[:,range(1,size(ccfs,2),step=10)], labels=:none)
 xlims!(ccf_mid_velocity-3*line_width_50,ccf_mid_velocity+3*line_width_50)
 cols_to_fit = findlast(x->x<ccf_mid_velocity-3*line_width_50,v_grid):findfirst(x->x>ccf_mid_velocity+3*line_width_50,v_grid)
+heatmap(v_grid,1:size(ccfs_norm,2),ccfs_norm'.-ccf_template')
 heatmap(view(v_grid,cols_to_fit),1:size(ccfs_norm,2),view(ccfs_norm,cols_to_fit,:)'.-view(ccf_template,cols_to_fit,:)')
-#heatmap(v_grid,1:size(ccfs_norm,2),ccfs_norm'.-ccf_template')
 xlabel!("v (m/s)")
 ylabel!("Observation ID")
 title!("34411: CCF - <CCF>, ESPRESSO mask + SNR weights")
@@ -97,12 +103,13 @@ savefig("ccf_heatmaps_34411_espresso_msf=4.0.png")
 max_orders = 12:83
   order_list_timeseries = extract_orders(all_spectra,pipeline_plan, orders_to_use=max_orders, recalc=true )
 
-linelist_for_ccf_fn_w_path = joinpath(pkgdir(EchelleCCFs),"data","masks","G2.espresso.mas")
- line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity, Δv_to_avoid_tellurics = RvSpectMLBase.max_bc+2.5*line_width_50,
- orders_to_use=max_orders, recalc=true, verbose=true)
+linelist_for_ccf_fn_w_path = joinpath(pkgdir(EchelleCCFs),"data","masks",line_list_filename)
+ line_list_espresso = prepare_line_list(linelist_for_ccf_fn_w_path, all_spectra, pipeline_plan, v_center_to_avoid_tellurics=ccf_mid_velocity,
+      Δv_to_avoid_tellurics = 1*RvSpectMLBase.max_bc+5*line_width_50+2*default_ccf_mask_v_width(EXPRES1D()),
+      orders_to_use=max_orders, recalc=true, verbose=true)
 
 (order_ccfs, order_ccf_vars, v_grid_order_ccfs) = ccf_orders(order_list_timeseries, line_list_espresso, pipeline_plan, mask_scale_factor=4.0, ccf_mid_velocity=ccf_mid_velocity,
- v_step=100, v_max= 2*RvSpectMLBase.max_bc, orders_to_use=max_orders, calc_ccf_var=true,recalc=true)
+ v_step=100, v_max= 0*RvSpectMLBase.max_bc+5*line_width_50, orders_to_use=max_orders, calc_ccf_var=true,recalc=true)
 
 obs_id = 1
 heatmap(v_grid, max_orders, (order_ccfs[:,:,obs_id]./mean(order_ccfs[:,:,obs_id],dims=1))')
@@ -112,7 +119,7 @@ title!("34411: CCF_" *string(obs_id) * ", ESPRESSO mask + SNR weights")
 #xlims!(ccf_mid_velocity-RvSpectMLBase.max_bc,ccf_mid_velocity+RvSpectMLBase.max_bc)
 xlims!(ccf_mid_velocity-3*line_width_50,ccf_mid_velocity+3*line_width_50)
 
-alg_fit_rv2 =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=1.5)
+alg_fit_rv2 =  EchelleCCFs.MeasureRvFromCCFGaussian(frac_of_width_to_fit=fwtf)
 order_rvs_g = zeros(length(all_spectra), length(max_orders))
 order_rv_std_g = zeros(length(all_spectra), length(max_orders))
 order_rvs_t = zeros(length(all_spectra), length(max_orders))
@@ -121,7 +128,7 @@ for (i,ord) in enumerate(max_orders)
    println("# Order: ", i)
    if sum(view(order_ccfs,:,i,1)) > 0
       rvs_order_ccf = RvSpectML.calc_rvs_from_ccf_total(view(order_ccfs,:,i,:), view(order_ccf_vars,:,i,:), pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv2)
-      alg_fit_rv3 =  EchelleCCFs.MeasureRvFromCCFTemplate(v_grid=v_grid, frac_of_width_to_fit=1.5, template = vec(mean(view(order_ccfs,:,i,:),dims=2)) )
+      alg_fit_rv3 =  EchelleCCFs.MeasureRvFromCCFTemplate(v_grid=v_grid, frac_of_width_to_fit=fwtf, template = vec(mean(view(order_ccfs,:,i,:),dims=2)) )
       order_rvs_g[:,i] .= read_cache(pipeline_plan, :rvs_ccf_total )
       order_rv_std_g[:,i] .= read_cache(pipeline_plan, :σ_rvs_ccf_total)
       rvs_order_ccf = RvSpectML.calc_rvs_from_ccf_total(view(order_ccfs,:,i,:), view(order_ccf_vars,:,i,:), pipeline_plan, v_grid=v_grid, times = order_list_timeseries.times, recalc=true, bin_nightly=true, alg_fit_rv=alg_fit_rv3)
@@ -132,7 +139,7 @@ end
 
 
 EchelleCCFs.write_each_ccf_fits(map(s->s.metadata,all_spectra), 100.0 .* v_grid, ccfs_espresso, ccf_vars_espresso,   fits_hdr=EchelleCCFs.make_ccf_fits_header(all_spectra[1].metadata),
-                  orders=161 .-max_orders,ccf_orders=order_ccfs,ccf_orders_var=order_ccf_vars,
+                  line_list_filename=line_list_filename, orders=161 .-max_orders,ccf_orders=order_ccfs,ccf_orders_var=order_ccf_vars,
                   total_vel=100.0 .* rvs_ccf_espresso, sigma_total_vel= 100.0 .* σ_rvs_espresso,
                   order_vels = 100.0 .* order_rvs_g, sigma_order_vels = 100.0 .* order_rv_std_g )
 
