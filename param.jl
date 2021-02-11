@@ -47,3 +47,30 @@ if fits_target_str == "26965" # K0?
       @take(max_spectra_to_use) |>
       DataFrame
 end
+
+if fits_target_str == "Sim1"
+   global espresso_mask_filename = "G2.espresso.mas"
+   global ccf_mid_velocity = 67000.0
+   global df_files
+   global df_files_use = df_files |>
+      @take(max_spectra_to_use) |>
+      DataFrame
+end
+
+if fits_target_str == "Sim2"
+   global espresso_mask_filename = "G2.espresso.mas"
+   global ccf_mid_velocity = 67000.0
+   global df_files
+   global df_files_use = df_files |>
+      @take(max_spectra_to_use) |>
+      DataFrame
+end
+
+if fits_target_str == "Sim3"
+   global espresso_mask_filename = "G2.espresso.mas"
+   global ccf_mid_velocity = 67000.0
+   global df_files
+   global df_files_use = df_files |>
+      @take(max_spectra_to_use) |>
+      DataFrame
+end
