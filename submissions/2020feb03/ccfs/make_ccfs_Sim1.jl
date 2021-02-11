@@ -1,8 +1,6 @@
 if occursin(r"RvSpectMLEcoSystem$", pwd())   cd("EXPRES-StellarSignals")   end
 using Pkg
 Pkg.activate(".")
-Pkg.develop("RvSpectMLBase")
-Pkg.develop("EchelleInstruments")
 
 verbose = true
  make_plots = true
