@@ -45,3 +45,6 @@ tmp.jl
 # CCF Outputs
 *_ccf.fits
 test.fits
+
+# Line-by-line fits outputs
+*good_lines_fit_quant*.csv

@@ -1,4 +1,3 @@
-using Pkg
 verbose = true
 if verbose && !isdefined(Main,:RvSpectMLBase)   println("# Loading RvSpecMLBase")    end
 using RvSpectMLBase
@@ -12,7 +11,7 @@ if verbose && !isdefined(Main,:RvSpectML)  println("# Loading RvSpecML")    end
  using DataFrames, Query, Statistics, Dates
 
 
-all_spectra = include(joinpath(pkgdir(EchelleInstruments),"examples/read_expres_data_" * starid * ".jl"))
+all_spectra = include(joinpath(pkgdir(EchelleInstruments),"examples/read_expres_data_" * string(starid) * ".jl"))
 #all_spectra = include(joinpath(pkgdir(EchelleInstruments),"examples/read_expres_data_101501.jl"))
 #all_spectra = include(joinpath(pkgdir(EchelleInstruments),"examples/read_expres_data_10700.jl"))
 #all_spectra = include(joinpath(pkgdir(EchelleInstruments),"examples/read_expres_data_26965.jl"))

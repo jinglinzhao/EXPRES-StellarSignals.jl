@@ -1,4 +1,5 @@
 using Pkg
+cd("EXPRES-StellarSignals")
 Pkg.activate(".")
 cd("submissions/2021feb15")
 starid = 10700
