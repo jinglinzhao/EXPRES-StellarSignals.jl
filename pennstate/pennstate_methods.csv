@@ -1,11 +1,11 @@
 Name,Nick Name,Type,Input,Re-Calculated,Run On,Run Time,Results
 # Eric is lead for...
 Doppler constrained PCA in chunks near lines in ESPRESSO mask,dcpca0,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca0_results.csv
-Doppler constrained PCA on chunks near lines in custom line list/mask 1,dcpca1,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca1_results.csv
-Doppler constrained PCA on chunks near lines in custom line list/mask 2,dcpca2,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca2_results.csv
+Doppler constrained PCA on chunks near lines in custom line list/mask 3,dcpca1,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca3_results.csv
+Doppler constrained PCA on chunks near lines in custom line list/mask 4,dcpca2,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_dcpca4_results.csv
 Scalpels using CCFs from ESPRESSO mask,scalpels0,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels0_results.csv
-Scalpels using CCFs from custom line list/mask 1,scalpels1,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels1_results.csv
-Scalpels using CCFs from custom line list/mask 2,scalpels2,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels2_results.csv
+Scalpels using CCFs from custom line list/mask 1,scalpels3,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels3_results.csv
+Scalpels using CCFs from custom line list/mask 2,scalpels4,OTH,spectra,CCFs & RVs & indicators,Laptop,20s,pennstate_scalpels4_results.csv
 # Jinglin is lead for...
 #$\Phi$esta on EXPRES provided CCFs,fiesta1,OTH,CCFs,None,Laptop,minute,pennstate_fiesta1_results.csv
 #$\Phi$esta on custom CCFs,fiesta2,OTH,CCFs,CCFs,Laptop,minute,pennstate_fiesta2_results.csv
