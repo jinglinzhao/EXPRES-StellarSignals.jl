@@ -1,5 +1,5 @@
 using Pkg
-cd("EXPRES-StellarSignals")
+if occursin(r"RvSpectMLEcoSystem$", pwd())   cd("EXPRES-StellarSignals")   end
 cd("submissions/2021feb15")
 Pkg.activate(".")
 starid = 26965

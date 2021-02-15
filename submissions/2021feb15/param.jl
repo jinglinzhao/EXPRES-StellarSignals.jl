@@ -1,4 +1,4 @@
-global max_spectra_to_use = 20
+global max_spectra_to_use = 200
 if max_spectra_to_use < 200
    @warn "param.in setting max_spectra_to_use to " * string(max_spectra_to_use)
 end
@@ -26,8 +26,14 @@ if fits_target_str == "Solar"
 end
 
 
+
+
+
 if fits_target_str == "101501"
    global espresso_mask_filename = "G9.espresso.mas"
+   global psu_mask3_filename = "HD101501q90f95n8e=false_mask.csv"
+   global psu_mask4_filename = "HD101501q45f95n8e=false_mask.csv"
+
    global ccf_mid_velocity = -5.0e3
    global df_files
    global df_files_use = df_files |>
@@ -36,10 +42,10 @@ if fits_target_str == "101501"
       DataFrame
 end
 
-
-
 if fits_target_str == "10700"
-   global espresso_mask_filename = "G8.espresso.mas"
+   global espresso_mask_filename = "G9.espresso.mas"
+   global psu_mask3_filename = "HD10700q90f80n7e=false_mask.csv"
+   global psu_mask4_filename = "HD10700q50f80n7e=false_mask.csv"
    global ccf_mid_velocity = -16640.0
    global df_files
    global df_files_use = df_files |>
@@ -48,9 +54,10 @@ if fits_target_str == "10700"
       DataFrame
 end
 
-
 if fits_target_str == "34411"  #G1?
    global espresso_mask_filename = "G2.espresso.mas"
+   global psu_mask3_filename = "HD34411q90f80n0e=false_mask.csv"
+   global psu_mask4_filename = "HD34411q65f80n0e=false_mask.csv"
    global ccf_mid_velocity = 66500.0
    global df_files
    global df_files_use = df_files |>
@@ -59,9 +66,10 @@ if fits_target_str == "34411"  #G1?
       DataFrame
 end
 
-
 if fits_target_str == "26965" # K0?
    global espresso_mask_filename = "G9.espresso.mas"
+   global psu_mask3_filename = "HD26965q90f95n3e=false_mask.csv"
+   global psu_mask4_filename = "HD26965q55f95n3e=false_mask.csv"
    global ccf_mid_velocity = -40320.0
    global df_files
    global df_files_use = df_files |>
