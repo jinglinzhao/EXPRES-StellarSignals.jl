@@ -10,7 +10,7 @@ Scalpels using CCFs from custom line list/mask 2,scalpels4,OTH,spectra,CCFs & RV
 Scalpels using CCFs from ESPRESSO mask + Multivariate GP with Matern 5/2 kernel,scalpels0_glom_m52,OTH,spectra,CCFs & RVs & indicators,Laptop,20 min,pennstate_scalpels0_glom_m52_results.csv
 
 # Jinglin is lead for...
-#$\Phi$esta on EXPRES provided CCFs,fiesta1,OTH,CCFs,None,Laptop,minute,pennstate_fiesta1_results.csv
+$\Phi$esta on EXPRES provided CCFs + PCA on $\Phi$esta coefficients + GLOM on PCA scores,fiesta0,OTH,CCFs,None,Laptop,minute,pennstate_fiesta_pca_glom_results.csv
 #$\Phi$esta on custom CCFs,fiesta2,OTH,CCFs,CCFs,Laptop,minute,pennstate_fiesta2_results.csv
 # Alex is lead for...
 #CCFs using custom masks segregated by line depth,ccfmultidepth1,RV,spectra,RVs & indicators,Laptop,minute,pennstate_ccfmultidepth1_results.csv
