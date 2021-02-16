@@ -65,23 +65,27 @@ From there, we apply a Principal Components Analysis (PCA) analysis to the flux 
 To compute a ``clean RV'', we subtract the RV predicted by a linear regression on the scores versus CCF velocities.
 One other difference from the Jones et al. (2020) and Gilbertson et al. (2020) use of DCPCA is that rather than using the entire spectrum, we use chunks of spectrum around the same lines as used for the CCF calculation.
 This allowed us to avoid regions potentially contaminated by telluric variability.
-It also allows more direct comparison of results accross methods.
+It also allows more direct comparison of results across methods.
 
 
 \subsection{What is the method sensitive to? (e.g. asymmetric line shapes, certain periodicities, etc.)}
-The method is sensitive to line shape changes, including changes in the differential changes in line depths, widths and assymetries between lines.
+The method is sensitive to line shape changes, including changes in the differential changes in line depths, widths and asymmetries between lines.
 
 \subsection{Are there any known pros/cons of the method?  For instance, is there something in particular that sets this analysis apart from previous methods?}
 This method has the potential to exploit information about changes in shapes lines and does not average over many lines, such as methods analyzing the CCF.
 
 Given the small number of observations and large temporal gaps for the HD 1010501 dataset, we did not apply the multivariate Gaussian Process models recommended by Jones et al. (2020) or Gilbertson et al. (2020).
 Therefore, our method is sensitive only to changes in the wavelength domain and does not use any temporal information.
-We hope that future datasets will include a sufficient number and spacing of observations to allow us to exploit the temporal information.
+We were glad to see that future datasetss included more observations that may allow us to exploit the temporal information.  Unfortunately, due to time constraints, we did manage to apply the full DCPCA + multivariate GP model.  We may explore this in the future.
+
 
 \subsection{What does the method output and how is this used to mitigate contributions from photospheric velocities?}
 
 The method provides scores for each principal component.  Ideally, these would be used with a multivariate GP to model stellar activity-induced RVs.  For the HD 101501 dataset, we use only linear regression.
 In principle, one can use the basis vectors associated with each principal component to understand what features in the spectra are contributing to each score.
+We performed a cursory analysis of the basis vectors and found that the largest weight typically came for pixels near the beginning of an order (no apparent correlation with line locations) and occasionally from the ends of an order.  We suspect that this is because of either instrumental variability being accentuated near the edges of orders and/or the continuum normalization being less reliable there.
+
+Therefore, we tried increasing the minimum pixel number (originally 770) within an order and repeated the analysis.  This resulted in reducing the most extreme weights, but again the largest weights were typically for pixels near the edges of orders.  After repeating this a few times, we settled on a minimum pixel number of 1000.  The early pixels in a few orders still contributed to much of the variability picked up by DCPCA, but this choice controlled the most severe examples and avoiding eliminating lots of pixel in order that weren't effected (or requiring more fine tuning for different orders).
 
 \subsection{Other comments?}
 
@@ -90,7 +94,7 @@ NA
 \section{Data Requirements}
 \subsection{What is the ideal data set for this method?  In considering future instrument design and observation planning, please comment specifically on properties such as the desired precision of the data, resolution, cadence of observations, total number of observations, time coverage of the complete data set, etc.}
 
-The high spectral resolution and SNR of EXPRES are well suited to this method.  In the future, a larger number of observations and more closely spaced observations would allow us to combine the DCPCA method with a multivariate GP to exploit temporal information, as well as the spectroscopic information.
+The high spectral resolution and SNR of EXPRES are well suited to this method.  In the future, an even larger number of observations and fewer gaps in observations could allow us to combine the DCPCA method with a multivariate GP to exploit temporal information, as well as the spectroscopic information.
 
 The ideal dataset would have broad wavelength coverage.
 We lost a significant portion of the spectrum available due to only using regions with LFC wavelength calibration.
@@ -106,20 +110,23 @@ NA
 \section{Applying the Method}
 \subsection{What adjustments were required to implement this method on \texttt{EXPRES} data?  Were there any unexpected challenges?}
 
-The second observation had substantially lower signal-to-noise than other spectra.
+The second observation for HD 101501 had substantially lower signal-to-noise than other spectra.
 Therefore, we omitted this spectra when computing the basis vectors.
+Due to time constraints, we did not give the other stars enough attention to notice similar issues.
 
-As noted above, we modified the original DCPCA method to deal with variation int the observed barycentric wavelenegths and location of telluric features.
+As noted above, we modified the original DCPCA method to deal with variation in the observed barycentric wavelenegths and location of telluric features.
 
 \subsection{How robust is the method to different input parameters, i.e. does running the method require a lot of tuning to be implemented optimally?}
 
 The algorithm appears to be quite robust, assuming we fix which wavelength ranges are being used.
 We include results based on three different line lists, so as to illustrate the sensitivity of the method to different choices of linelists.
+Unfortunately, the customized line lists did not perform as well in the second round as for the first round.  For now, it's unclear if this is due to different stellar properties or to human factors and rushing to submit by the deadline.
 
 \subsection{What metric does the method (or parameter tuner) use internally to decide if the method is performing better or worse?  (e.g. nightly RMS, specific likelihood function, etc.)}
 
 Once the  wavelength ranges are being used are fixed, the only tuning is the number of principal components to use.
-We simply chose to use a simple principal component given the small size of the dataset.
+In round one, we simply chose to use a simple principal component given the small size of the dataset.
+For round two, we chose to use two  principal components, since most datasets had more significantly observations.  This choice was also informed by looking at the basis vectors and observing a stronger correlation between the second basis vector's scores and the RVs.
 If there were a much larger number of observations, then we could divide the data into training and test subsets to choose the number of principal components via cross validation.
 
 \subsection{Other comments?}
@@ -156,6 +163,7 @@ We provide results based on three different line lists.
 Results in dcpca0 were based on using the ESPRESSO G8 line list to compute CCFs and identify wavelength regions for applying DCPCA.
 The other two line lists used were custom built for this star based on the EXPRES data and VALD, as described in the accompanying methods document on CCFs.
 Each line list was filtered to only use lines that were available, on the same order, telluric-free, and LFC-calibrated for all observations.
-After filtering, the linelist for dcpca1 (dcpca2) contained 332 (389) lines.
+After the filtering for round one, the linelist for dcpca1 (dcpca2) contained 332 (389) lines.
+After the filtering for round two, the linelist for dcpca3 (dcpca4) contained only 168 (95) lines.  We suspect that some change introduced to help work with the other stars, resulted in trimming the lines too aggressively and an inadequately number of lines for measuring shape variations well.  
 
 \end{document}

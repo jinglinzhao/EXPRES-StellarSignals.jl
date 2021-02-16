@@ -1,0 +1,130 @@
+\documentclass[12pt]{article}
+\renewcommand\abstractname{\textbf{ABSTRACT}}
+%----------Packages----------
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsrefs}
+\usepackage{dsfont}
+\usepackage{mathrsfs}
+\usepackage{stmaryrd}
+\usepackage[all]{xy}
+\usepackage[mathcal]{eucal}
+\usepackage{verbatim}  %%includes comment environment
+\usepackage{fullpage}  %%smaller margins
+\usepackage{times}
+\usepackage{multicol}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+%\usepackage{cite}
+\usepackage{setspace}
+%----------Commands----------
+%%penalizes orphans
+\clubpenalty=9999
+\widowpenalty=9999
+\providecommand{\abs}[1]{\lvert #1 \rvert}
+\providecommand{\norm}[1]{\lVert #1 \rVert}
+\usepackage{ amssymb }
+\providecommand{\x}{\times}
+\usepackage{sectsty}
+\usepackage{lipsum}
+\usepackage{titlesec}
+\titleformat*{\section}{\normalsize\bfseries\scshape}
+\titleformat*{\subsection}{\normalsize}
+\titleformat*{\subsubsection}{\normalsize\bfseries\filcenter}
+\titleformat*{\paragraph}{\normalsize\bfseries\filcenter}
+\titleformat*{\subparagraph}{\normalsize\bfseries\filcenter}
+\usepackage{indentfirst}
+\providecommand{\ar}{\rightarrow}
+\providecommand{\arr}{\longrightarrow}
+%\hyphenpenalty  10000
+%\exhyphenpenalty 10000
+\usepackage[english]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fancyhdr}
+\usepackage[top=1in,bottom=1in,right=1in,left=1in,headheight=200pt]{geometry}
+\pagestyle{fancy}
+\lhead{Penn State}
+\chead{}
+\rhead{Scalpels}
+\cfoot{\thepage}
+\titlespacing*{\section}{0pt}{0.75\baselineskip}{0.1\baselineskip}
+\usepackage[labelfont=sc]{caption}
+\captionsetup{labelfont=bf}
+%\doublespacing
+
+\begin{document}
+\section{Description of the Method}
+\subsection{Please provide a short (1-2 paragraph) summary of the general idea of the method.  What does it do and how?  If the method has been previously published, please provide a link to that work in addition to answering this and the following questions.}
+
+We applied the Scalpels algorithm for separating shift and shape-induced changes in the CCF.
+The methodology closely follows that of Collier-Cameron et al. (2020; arxiv:2011.00018; submitted to MNRAS) and is very similar to that used by the St. Andrew's group.
+Rather than providing a largely redundant response to that of the St. Andrew's group, we only highlight differences in the implementation details.
+Code is avaliable at https://github.com/RvSpectML/Scalpels.jl
+
+%\subsection{What is the method sensitive to? (e.g. asymmetric line shapes, certain periodicities, etc.)}
+%See St. Andrew's response.
+
+%\subsection{Are there any known pros/cons of the method?  For instance, is there something in particular that sets this analysis apart from previous methods?}
+%See St. Andrew's response.
+
+%\subsection{What does the method output and how is this used to mitigate contributions from photospheric velocities?}
+%See St. Andrew's response.
+
+%\subsection{Other comments?}
+
+
+
+\section{Data Requirements}
+\subsection{What is the ideal data set for this method?  In considering future instrument design and observation planning, please comment specifically on properties such as the desired precision of the data, resolution, cadence of observations, total number of observations, time coverage of the complete data set, etc.}
+
+A larger set of spectra would be ideal.  For a star like HD 1010501 that appears to have substantial activity, there are strong correlations between observations within one night (or even subsequent nights).  Therefore, the effective number of observations was substantially less than the total number of observations.
+
+It may be important to note that Scalpels has previously been applied to daily average solar observations which effectively average over granulation signals.  While it appears the the RVs of for HD 101501 are dominated by stellar activity rather than granulation, the ideal dataset would have longer or multiple observations per night so as to average over granulation.
+
+%\subsection{Are there any absolute requirements of the data that must be satisfied in order for this method to work?  Rough estimates welcome.}
+%See St. Andrew's response.
+
+%\subsection{Other comments?}
+
+
+
+\section{Applying the Method}
+\subsection{What adjustments were required to implement this method on \texttt{EXPRES} data?  Were there any unexpected challenges?}
+
+In round one, the St. Andrew's analysis used the same CCF mask as the Penn State team's "scalpels_clean2" analysis.
+We used RVs derived from fitting a Gaussian to the resulting CCFs, rather than using the RVs provided by the EXPRES team.  This resulted in the input RVs having a smaller RMS and allowed us to use significantly fewer basis vectors than the St. Andrew's team.
+
+In round two, the other teams were provided the CCFs we used for our "scalpels0" analyses.
+
+%\subsection{How robust is the method to different input parameters, i.e. does running the method require a lot of tuning to be implemented optimally?}
+
+\subsection{What metric does the method (or parameter tuner) use internally to decide if the method is performing better or worse?  (e.g. nightly RMS, specific likelihood function, etc.)}
+
+For reasons described in \S 2.1, we limited the number of basis vectors to remove at 2 (rather than 6 by St. Andrew's group), so as to minimize risk of overfitting to the data.
+
+%\subsection{Other comments?}
+
+
+\section{Reflection on the Results}
+\subsection{Did the method perform as expected?  If not, are there adjustments that could be made to the data or observing schedule to enhance the result?}
+
+The method appears to have performed well.  We expect that it could perform even better with a substantially larger number of spectra.
+If there were subsets of the data that included dense sampling spread over ~2 or more rotation periods, then it might be possible to further improve on the Scalpels velocities by using the cleaned velocities and Scalpels indicators as inputs into a multivariate Gaussian Process model for stellar variability (Gilbertson et al. 2020; arXiv:2009.01085).
+
+While we do hope to explore this in the future, time limitations meant that we made only a very first pass at this.  The results weren't sufficiently better than applying Scalpels by itself to get excited above.
+
+\subsection{Was the method able to run on all exposures?  If not, is there a known reason why it failed for some exposures?}
+Yes.  We did not treat any observations differently for the Scalpels analysis.
+
+\subsection{If the method is GP based, please provide the kernel used and the best-fit hyper parameters with errors.  Otherwise, just write ``Not Applicable.''}
+Not Applicable.
+
+%\subsection{Other comments?}
+
+
+\section{General Comments}
+
+
+\end{document}
