@@ -61,7 +61,7 @@
 We applied the Scalpels algorithm for separating shift and shape-induced changes in the CCF.
 The methodology closely follows that of Collier-Cameron et al. (2020; arxiv:2011.00018; submitted to MNRAS) and is very similar to that used by the St. Andrew's group.
 Rather than providing a largely redundant response to that of the St. Andrew's group, we only highlight differences in the implementation details.
-Code is avaliable at https://github.com/RvSpectML/Scalpels.jl 
+Code is avaliable at https://github.com/RvSpectML/Scalpels.jl
 
 %\subsection{What is the method sensitive to? (e.g. asymmetric line shapes, certain periodicities, etc.)}
 %See St. Andrew's response.
@@ -93,8 +93,10 @@ It may be important to note that Scalpels has previously been applied to daily a
 \section{Applying the Method}
 \subsection{What adjustments were required to implement this method on \texttt{EXPRES} data?  Were there any unexpected challenges?}
 
-The St. Andrew's analysis used the same CCF mask as the Penn State team's "scalpels_clean2" analysis.
-We used RVs derived from fitting a Gaussian to the resulting CCFs, rather than using the RVs provided by the EXPRES team.  This resulted in the input RVs having a smaller RMS and allowed us to use significantly fewer basis vectors than the St. Andrew's team.  
+In round one, the St. Andrew's analysis used the same CCF mask as the Penn State team's "scalpels_clean2" analysis.
+We used RVs derived from fitting a Gaussian to the resulting CCFs, rather than using the RVs provided by the EXPRES team.  This resulted in the input RVs having a smaller RMS and allowed us to use significantly fewer basis vectors than the St. Andrew's team.
+
+In round two, the other teams were provided the CCFs we used for our "scalpels0" analyses.
 
 %\subsection{How robust is the method to different input parameters, i.e. does running the method require a lot of tuning to be implemented optimally?}
 
@@ -110,6 +112,8 @@ For reasons described in \S 2.1, we limited the number of basis vectors to remov
 
 The method appears to have performed well.  We expect that it could perform even better with a substantially larger number of spectra.
 If there were subsets of the data that included dense sampling spread over ~2 or more rotation periods, then it might be possible to further improve on the Scalpels velocities by using the cleaned velocities and Scalpels indicators as inputs into a multivariate Gaussian Process model for stellar variability (Gilbertson et al. 2020; arXiv:2009.01085).
+
+While we do hope to explore this in the future, time limitations meant that we made only a very first pass at this.  The results weren't sufficiently better than applying Scalpels by itself to get excited above.
 
 \subsection{Was the method able to run on all exposures?  If not, is there a known reason why it failed for some exposures?}
 Yes.  We did not treat any observations differently for the Scalpels analysis.

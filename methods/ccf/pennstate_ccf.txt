@@ -1,107 +1,107 @@
-Description of the Method 
+Description of the Method
 
-Please provide a short (1-2 paragraph) summary of the general idea of the method.  What does it do and how?  If the method has been previously published, please provide a link to that work in addition to answering this and the following questions. 
+Please provide a short (1-2 paragraph) summary of the general idea of the method.  What does it do and how?  If the method has been previously published, please provide a link to that work in addition to answering this and the following questions.
 
- 
 
-The goal of this method is to optimize the CCF method for this data set in order to provide CCFs, RVs, and activity indicators that are as clean as possible for other methods. We vary the mask entries (lines) and mask entry shapes, then construct CCFs and use RV RMS as our metric of success. We use an automatic line-fitting code to fit the line shapes and RVs in the 101501 data, and select lines based on shapes and RV variability. Then we filter the line by removing line close to tellurics according to the selenite model. Finally, we use VALD to reject closely blended lines. For the mask entry shapes we use rectangles, cosines, gaussians, and super-gaussians, but plan to add mask entry shapes customized to each line in the near future. 
 
- 
+The goal of this method is to optimize the CCF method for this data set in order to provide CCFs, RVs, and activity indicators that are as clean as possible for other methods. In round one, we varied the mask entries (lines) and mask entry shapes, then constructed CCFs and use RV RMS as our metric of success. We used an automatic line-fitting code to fit the line shapes and RVs in the 101501 data, and select lines based on shapes and RV variability. Then we filtered the line by removing line close to tellurics according to the selenite model. Finally, we used VALD to reject closely blended lines. For the mask entry shapes we used rectangles, cosines, gaussians, and super-gaussians, but plan to add mask entry shapes customized to each line in the near future.
 
-In its present state, this method is not designed to provide competitively low-RMS RVs. Activity corrections have not been applied to the CCFs (e.g. by only using deeper lines instead of shallow lines as in Cretignier et al. 2020). The code for CCF calculations we used is available publicly at https://github.com/RvSpectML/EchelleCCFs.jl. 
+For round two, we started with an initial blend-rejected VALD mask to identify isolated lines and measure their RV as a function of depth, as in Reiners et al. 2016, to measure convective blueshift for each dataset. These were {HD101501:250 m/s, HD10700:250 m/s, HD26965:200m/s, HD34411:400 m/s} which very nicely fits the expected trend of increasing convective velocity with effective temperature for FGK dwarves (Meunier et al. 2017). This may tell us which stars will have strong convective blueshift variation noise, but for we only used these to slightly improve the VALD mask wavelengths for each target.
+Next, we matched the VALD lines to a list of empirically fitted lines for each star and rejected any lines within a given threshold of other lines (from 0 to 27km/s).  This and a few other minor parameters were varried to find the best mask for each star (submissions ending in "4") and a single set of parameters than worked for all four stars (submissions ending in "3").
 
- 
 
-What is the method sensitive to? (e.g. asymmetric line shapes, certain periodicities, etc.) 
+In its present state, this method is not designed to provide competitively low-RMS RVs. Activity corrections have not been applied to the CCFs (e.g. by only using deeper lines instead of shallow lines as in Cretignier et al. 2020). The code for CCF calculations we used is available publicly at https://github.com/RvSpectML/EchelleCCFs.jl.
 
- 
 
-This method is sensitive to lines whose shapes are regular (Eric: specific shape parameter(s) for “fit” filter?), RV variability is smaller, and are not blended with other stellar atomic lines or telluric lines. 
 
- 
+What is the method sensitive to? (e.g. asymmetric line shapes, certain periodicities, etc.)
 
-Are there any known pros/cons of the method?  For instance, is there something in particular that sets this analysis apart from previous methods? 
 
- 
 
-The main advantage is that it mitigates targeted stellar noise sources in the CCFs and RVs. The Downside is that by reducing the number of lines we use, photon noise is increased. However, we expect stellar noise in the CCF and RVs to be easier to model due to reduced complexity. 
+This method is sensitive to lines whose shapes are regular (Eric: specific shape parameter(s) for “fit” filter?), RV variability is smaller, and are not blended with other stellar atomic lines or telluric lines.
 
- 
 
-What does the method output and how is this used to mitigate contributions from photospheric velocities? 
 
- 
+Are there any known pros/cons of the method?  For instance, is there something in particular that sets this analysis apart from previous methods?
 
-We output CCFs, RVs, and activity indicators based on the CCFs and RVs (e.g. CCF FWHM and “RV_deep – RV_shallow” for masks containing only deep and shallow lines). We have not incorporated the activity indicators into HD101501 analysis yet. 
 
- 
 
- 
+The main advantage is that it mitigates targeted stellar noise sources in the CCFs and RVs. The Downside is that by reducing the number of lines we use, photon noise is increased. However, we expect stellar noise in the CCF and RVs to be easier to model due to reduced complexity.
 
-Data Requirements 
 
-What is the ideal data set for this method?  In considering future instrument design and observation planning, please comment specifically on properties such as the desired precision of the data, resolution, cadence of observations, total number of observations, time coverage of the complete data set, etc. 
 
- 
+What does the method output and how is this used to mitigate contributions from photospheric velocities?
 
-The ideal data set for this method would very high SNR data. For example, five back-to-back exposures each with SNR > 300 would allow us to only use Fe 1 singlets and still get <20 cm/s. High sampling cadence and long baselines would also be important for planet-finding. 
 
- 
 
-Are there any absolute requirements of the data that must be satisfied in order for this method to work?  Rough estimates welcome. 
+We output CCFs, RVs, and activity indicators based on the CCFs and RVs (e.g. CCF FWHM and “RV_deep – RV_shallow” for masks containing only deep and shallow lines). We have not incorporated the activity indicators into HD101501 analysis yet.
 
- 
 
-No, it can be scaled to work with any data but the largest improvements do come with more photons. 
 
- 
 
- 
 
-Applying the Method 
+Data Requirements
 
-What adjustments were required to implement this method on \texttt{EXPRES} data?  Were there any unexpected challenges? 
+What is the ideal data set for this method?  In considering future instrument design and observation planning, please comment specifically on properties such as the desired precision of the data, resolution, cadence of observations, total number of observations, time coverage of the complete data set, etc.
 
- 
 
-The empirical masks and VALD database line lists are generated for each target star, but nothing comes to mind that is specific to EXPRES. 
 
- 
+The ideal data set for this method would very high SNR data. For example, five back-to-back exposures each with SNR > 300 would allow us to only use Fe 1 singlets and still get <20 cm/s. High sampling cadence and long baselines would also be important for planet-finding.
 
-How robust is the method to different input parameters, i.e. does running the method require a lot of tuning to be implemented optimally? 
 
- 
 
-We require stellar parameters including temperature and log g for VALD, as well as target approximate RV and approximate line velocity width, but once the initial parameters are established the method tuning, such as line list selection and mask shapes, is automated. 
+Are there any absolute requirements of the data that must be satisfied in order for this method to work?  Rough estimates welcome.
 
- 
 
-What metric does the method (or parameter tuner) use internally to decide if the method is performing better or worse?  (e.g. nightly RMS, specific likelihood function, etc.) 
 
- 
+No, it can be scaled to work with any data but the largest improvements do come with more photons.
 
-The automated tuning currently selects lines and mask shapes based on overall RMS. 
 
- 
 
-Reflection on the Results 
 
-Did the method perform as expected?  If not, are there adjustments that could be made to the data or observing schedule to enhance the result? 
 
- 
+Applying the Method
 
-Yes, we expected a small to moderate improvement in the CCF noise and RV RMS and we achieved that. 
+What adjustments were required to implement this method on \texttt{EXPRES} data?  Were there any unexpected challenges?
 
- 
 
-Was the method able to run on all exposures?  If not, is there a known reason why it failed for some exposures? Yes 
 
- 
+The empirical masks and VALD database line lists are generated for each target star, but nothing comes to mind that is specific to EXPRES.
 
-If the method is GP based, please provide the kernel used and the best-fit hyper parameters with errors.  Otherwise, just write ``Not Applicable.'' Not Applicable. 
 
- 
 
-General Comments 
+How robust is the method to different input parameters, i.e. does running the method require a lot of tuning to be implemented optimally?
 
- 
+
+
+We require stellar parameters including temperature and log g for VALD, as well as target approximate RV and approximate line velocity width, but once the initial parameters are established the method tuning, such as line list selection and mask shapes, is automated.
+
+
+
+What metric does the method (or parameter tuner) use internally to decide if the method is performing better or worse?  (e.g. nightly RMS, specific likelihood function, etc.)
+
+
+
+The automated tuning currently selects lines and mask shapes based on overall RMS.
+
+
+
+Reflection on the Results
+
+Did the method perform as expected?  If not, are there adjustments that could be made to the data or observing schedule to enhance the result?
+
+
+
+Yes, we expected a small to moderate improvement in the CCF noise and RV RMS and we achieved that, despite using many fewer lines.
+However, we suspect that we could improve measurements of line shape deviations by including more lines.
+
+
+Was the method able to run on all exposures?  If not, is there a known reason why it failed for some exposures? Yes
+
+
+
+If the method is GP based, please provide the kernel used and the best-fit hyper parameters with errors.  Otherwise, just write ``Not Applicable.'' Not Applicable.
+
+
+
+General Comments
