@@ -280,6 +280,24 @@ GLOM_rvs_at_plot_xs_inflated, GLOM_ind1_at_plot_xs_inflated, GLOM_ind2_at_plot_x
 GLOM_rvs_err_at_plot_xs_inflated, GLOM_ind1_err_at_plot_xs_inflated, GLOM_ind2_err_at_plot_xs_inflated = post_err_inflated
 GLOM_rvs_at_obs_xs_inflated, GLOM_ind1_at_obs_xs_inflated, GLOM_ind2_at_obs_xs_inflated = post_obs_inflated
 
+
+#------------------
+post_inflated, post_err_inflated, post_obs_inflated = GLOM_RV.GLOM_posteriors(problem_definition, obs_xs, fit1_total_hyperparameters)
+GLOM_rvs_at_plot_xs_inflated, GLOM_ind1_at_plot_xs_inflated, GLOM_ind2_at_plot_xs_inflated, GLOM_ind3_at_plot_xs_inflated, GLOM_ind4_at_plot_xs_inflated = post_inflated
+GLOM_rvs_err_at_plot_xs_inflated, GLOM_ind1_err_at_plot_xs_inflated, GLOM_ind2_err_at_plot_xs_inflated, GLOM_ind3_err_at_plot_xs_inflated, GLOM_ind4_err_at_plot_xs_inflated = post_err_inflated
+GLOM_rvs_at_obs_xs_inflated, GLOM_ind1_at_obs_xs_inflated, GLOM_ind2_at_obs_xs_inflated, GLOM_ind3_at_obs_xs_inflated, GLOM_ind4_at_obs_xs_inflated = post_obs_inflated
+GLOM_rvs_err_at_obs_xs_inflated = GLOM_rvs_err_at_plot_xs_inflated
+
+activity_rvs_inflated = GLOM_rvs_at_obs_xs_inflated  # the best guess for activity RVs
+clean_rvs_inflated = obs_rvs - activity_rvs_inflated  # the best guess for RVs without activity
+println("# Summary: median(obs_rvs_err) = ", median(obs_rvs_err), " std(obs_rvs) = ",std(obs_rvs), " std(activity_rvs) = ", std(activity_rvs_inflated), " std(clean_rvs) = ", std(clean_rvs_inflated), " std(sigma_obs_rvs+activity_rvs) = ", median(sqrt.(obs_rvs_err.^2 .+GLOM_rvs_err_at_obs_xs_inflated.^2)) )
+
+post_inflated, post_err_inflated, post_obs_inflated = GLOM_RV.GLOM_posteriors(problem_definition, plot_xs, fit1_total_hyperparameters)
+GLOM_rvs_at_plot_xs_inflated, GLOM_ind1_at_plot_xs_inflated, GLOM_ind2_at_plot_xs_inflated, GLOM_ind3_at_plot_xs_inflated, GLOM_ind4_at_plot_xs_inflated = post_inflated
+GLOM_rvs_err_at_plot_xs_inflated, GLOM_ind1_err_at_plot_xs_inflated, GLOM_ind2_err_at_plot_xs_inflated, GLOM_ind3_err_at_plot_xs_inflated, GLOM_ind4_err_at_plot_xs_inflated = post_err_inflated
+GLOM_rvs_at_obs_xs_inflated, GLOM_ind1_at_obs_xs_inflated, GLOM_ind2_at_obs_xs_inflated, GLOM_ind3_at_obs_xs_inflated, GLOM_ind4_at_obs_xs_inflated = post_obs_inflated
+
+#----
 # #=
 #using Plots
 plt1 = scatter(obs_xs, obs_rvs, yerror=obs_rvs_err, ylabel="RV (m/s)", legend=:none)
@@ -291,8 +309,14 @@ plot!(plt2, plot_xs, GLOM_ind1_at_plot_xs_inflated, ribbons=GLOM_ind1_err_at_plo
 plt3 = scatter(obs_xs, obs_indicator2, yerror=obs_indicator2_err, ylabel="Ind 2", legend=:none)
 plot!(plt3, plot_xs, GLOM_ind2_at_plot_xs_inflated, ribbons=GLOM_ind2_err_at_plot_xs_inflated, fillalpha=0.3)
 
-plt4 = scatter(obs_xs, clean_rvs_inflated, yerror=sqrt.(obs_rvs_err.^2 .+GLOM_rvs_err_at_obs_xs_inflated.^2 ), ylabel="RV (m/s)", legend=:none, xlabel="Time (d)")
-plot(plt1, plt2, plt3, plt4, layout = @layout [a; b; c; d] )
+plt4 = scatter(obs_xs, obs_indicator3, yerror=obs_indicator3_err, ylabel="Ind 3", legend=:none)
+plot!(plt4, plot_xs, GLOM_ind3_at_plot_xs_inflated, ribbons=GLOM_ind3_err_at_plot_xs_inflated, fillalpha=0.3)
+
+plt5 = scatter(obs_xs, obs_indicator4, yerror=obs_indicator4_err, ylabel="Ind 4", legend=:none)
+plot!(plt5, plot_xs, GLOM_ind4_at_plot_xs_inflated, ribbons=GLOM_ind4_err_at_plot_xs_inflated, fillalpha=0.3)
+
+plt6 = scatter(obs_xs, clean_rvs_inflated, yerror=sqrt.(obs_rvs_err.^2 .+GLOM_rvs_err_at_obs_xs_inflated.^2 ), ylabel="RV (m/s)", legend=:none, xlabel="Time (d)")
+plot(plt1, plt2, plt3, plt4, plt5, plt6, layout = @layout [a; b; c; d; e; f] )
 filename_fig = joinpath("pennstate",string(starid),string(starid) * "_pennstate_" * rv_indicators_type * "_glom_" * kernel_name * "_results.png")
 savefig(filename_fig)
 # =#
